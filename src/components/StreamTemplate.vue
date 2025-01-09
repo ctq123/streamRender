@@ -7,6 +7,7 @@ defineProps({
 
 // 用于接收流式内容并渲染
 const fetchStream = async () => {
+      console.time('fetchStream');
       const response = await fetch('http://localhost:3000/'); // 服务器端渲染的地址
       const reader = response.body.getReader(); // 获取流的读取器
       const decoder = new TextDecoder();
@@ -19,6 +20,7 @@ const fetchStream = async () => {
         htmlContent += decoder.decode(value, { stream: true }); // 解码流并追加到内容中
         document.getElementById('streamApp').innerHTML = htmlContent; // 更新页面
       }
+      console.timeEnd('fetchStream');
     };
 
   // 调用流式加载函数

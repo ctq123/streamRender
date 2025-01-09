@@ -2,7 +2,7 @@
 import express from 'express';
 import cors from 'cors';
 import { createApp } from 'vue';
-import { renderToStream } from '@vue/server-renderer';
+import { renderToNodeStream } from '@vue/server-renderer';
 
 const app = express();
 
@@ -14,7 +14,7 @@ const fetchUserInfo = () => {
   return new Promise((resolve) => {
     setTimeout(() => {
       resolve({ name: 'John Doe', age: 30 });
-    }, 5000);
+    }, 3000);
   });
 };
 
@@ -25,7 +25,7 @@ const fetchProductList = () => {
         { id: 1, name: 'Product 1', price: 100 },
         { id: 2, name: 'Product 2', price: 200 },
       ]);
-    }, 2000);
+    }, 1000);
   });
 };
 
@@ -58,8 +58,10 @@ const ProductList = {
 
 app.get('/', async (req, res) => {
   try {
+    console.time('Request fetched')
     // 获取用户信息和产品列表
     const [userInfo, productList] = await Promise.all([fetchUserInfo(), fetchProductList()]);
+    console.timeEnd('Request fetched')
 
     // 创建 Vue 应用
     const vueApp = createApp({
@@ -76,7 +78,7 @@ app.get('/', async (req, res) => {
     });
 
     // 使用 renderToStream 渲染为流
-    const stream = await renderToStream(vueApp);
+    const stream = await renderToNodeStream(vueApp);
 
     // 设置响应头，启用流式传输
     res.setHeader('Content-Type', 'text/html');
