@@ -10,14 +10,16 @@ const fetchStream = async () => {
       console.time('fetchStream');
       const response = await fetch('http://localhost:3000/'); // 服务器端渲染的地址
       const reader = response.body.getReader(); // 获取流的读取器
-      const decoder = new TextDecoder();
+      const decoder = new TextDecoder('utf-8');
       let htmlContent = '';
       
       // 读取流并累积数据
       while (true) {
         const { done, value } = await reader.read();
+        console.log('value', done, value)
         if (done) break; // 数据读取完毕
         htmlContent += decoder.decode(value, { stream: true }); // 解码流并追加到内容中
+        console.log('htmlContent', htmlContent)
         document.getElementById('streamApp').innerHTML = htmlContent; // 更新页面
       }
       console.timeEnd('fetchStream');
