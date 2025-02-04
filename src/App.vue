@@ -16,6 +16,7 @@ import StreamTemplate from './components/StreamTemplate.vue';
   <StreamTemplate msg="Vite + Vue" />
 </template>
 
+
 <style scoped>
 .logo {
   height: 6em;
